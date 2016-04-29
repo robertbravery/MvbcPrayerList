@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=40, initial-scale=1">  
+       
+		<title>MVBC App Post Test</title>
+	</head>
+	
+	<body>
+        <script src="js/jquery-2.1.4.min.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: "http://mvbc.netne.net/updateMySqlData.php",
+                crossDomain: true,
+                data: getData(), 
+                success: success,
+                //If error log to console.
+                error: error,
+                //dataType: "json",
+                contentType:"application/text",
+                complete: complete
+            });
+        })
+        function getData () {
+            prayerData = JSON.parse(localStorage.getItem("data"));
+            prayerRow=null;
+            $.each(prayerData, function (index, item) {
+                if (item.ID === "999") {
+                    prayerRow=item;
+                    return false;
+                    //break;
+                }
+            });
+            return JSON.stringify(prayerRow);
+        } 
+        
+        function success (data) {
+            console.log('Success');
+            //console.log(data);
+            $("Body").append(data);
+        }
+        
+        function complete (data) {
+             console.log('Complete');       
+         }
+         
+        function error (XMLHttpRequest, textStatus, errorThrown) {
+                console.log("AJAX error in request: " + JSON.stringify(errorThrown, null, 2));
+        }    
+    
+    </script>
+        
+	</body>

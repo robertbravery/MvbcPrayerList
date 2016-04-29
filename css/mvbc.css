@@ -1,0 +1,37 @@
+.bg-1 {
+        background-color: #1abc9c;
+        /* Green */
+        color: #ffffff;
+        
+    }
+    
+.bg-2 {
+        background-color: #474e5d;
+        /* Dark Blue */
+        color: #ffffff;
+        font-size: 10pt
+    }
+    
+.bg-3 {
+        background-color: #ffffff;
+        /* White */
+        color: #555555;
+    }
+    
+.bg-3 {
+        color: white;
+        background-color: darkslategray
+    }
+.fg-1 {
+     color: black;
+     font-size: 8pt;
+}    
+#ajaxSpinnerImage {
+        display: none;
+    }
+    
+.cell-long {
+        white-space:normal;
+        word-wrap:break-word; 
+        word-break:break-word;
+}

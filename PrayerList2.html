@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">   
+    <link rel="stylesheet" href="css/mvbc.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css"> 
+</head>
+<body>
+    <div class="container-fluid bg-1 text-center">
+        <span><img src="pics\Bible1_xsm.jpg" style="float:left; padding:10px 5px 10px 5px" class="img-circle img-responsive" ></span>
+        <span class="text-center"><h3>Mountainview Bible Church</h3></span>
+        <h5>By MVBC Youth</h5>
+    </div>
+    <div class="container-fluid bg-2 text-center">
+        <h3>Prayer List</h3>
+    </div>
+    <nav role="navigation" class="navbar navbar-default">
+        <div class="navbar-header">
+            <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="#" class="navbar-brand">MVBC</a>
+        </div>
+        <div id="navbarCollapse" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Music</a></li>
+                <li><a href="#">Events</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid table-responsive">
+
+<table id="prayerList" class="table table-striped table-bordered table-hover">
+	<thead class="bg-2">
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Description</th>
+            <th>pic</th>
+			<th>Ans.</th>
+		</tr>
+	</thead>
+	<tbody>
+	
+	</table>
+	<div class="center-block" id="ajaxSpinnerContainer">
+		<img src="pics/ajax-loader.gif" id="ajaxSpinnerImage" title="Working ..."/>
+	</div>
+
+    </div>
+    <script src="js/jquery-2.1.4.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $('#prayerList').on('click','tr', function() {
+            if (this.lastElementChild.firstElementChild.textContent === "No") {
+                $datarow = this;
+                if (confirm( "Are you sure you want to update prayer item to answered:"))   {
+                    $.post("http://localhost/php/updatedata.php", {id:this.id}, function() {
+                    $datarow.lastElementChild.firstElementChild.className = "label label-success";
+                    $datarow.lastElementChild.firstElementChild.textContent = "Yes";        
+                    alert("Prayer item has been confirmed as answered.");        
+                  });
+            };
+        };
+        });
+        $(function () {
+
+            // select the employees table from the page and
+            // store it in a variable for later use.
+            var $prayerList = $("#prayerList");
+			var prayerData;
+            // make an ajax call to the employees WebAPI service
+            // to retrieve a JSON response of all the employees
+            $.ajax({
+
+                // the url to the service
+                url: "http://localhost/php/prayerjson.php",
+                //url: "http://mvbc.netne.net/prayerjson.php",
+                //url: "http://mvbc.netne.net/getMySqlData.php",
+                
+                //url: "http://mvbc.byethost13.com/phpjson.php",
+                //crossDomain: true,
+                // the format that the data should be in when
+                // it is returned
+                contentType: "json",
+                
+                //Show a busy immage 
+               beforeSend: function () {
+					$("#ajaxSpinnerImage").show();
+				},
+			   
+                
+                // the function that executes when the server
+                // responds to this ajax request successfully
+                success: function (data) {
+                    if (data.indexOf('<!') < 0)
+                        var jdata = data;
+                    else    
+                        var jdata = data.substr(0, data.indexOf('<!')); 
+                    //Put the data into local storage.
+                    localStorage.setItem("data", jdata);
+                   
+                         
+
+                },
+                
+                //If error log to console.
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log("AJAX error in request: " + JSON.stringify(errorThrown, null, 2));
+                },
+                
+                //Once the call is complete get a show the data
+                complete: function (data) {
+                    
+                    //declare variable
+                    //Check and retrieve data from local storage  
+                                      
+                    prayerData = JSON.parse(localStorage.getItem("data"));
+                    
+                    //If never retrieved use default values
+                    if(prayerData == null || prayerData == undefined) {
+                        prayerData = JSON.parse('[{"ID":-1,"Name":"No item","Date":"2015-12-31","Description":"Cannot get data no connection.</br>To get the first set of data, connect at least once to the internet.","Answer":false, AnswerPic:""}]')
+                    }
+                    var yn;
+                    var row;
+                    
+                    // put the JSON response from local storage in the prayers table
+                    // If we have no connection, it does not matter 
+                    // because we will still have data in local storage
+                    // Iterate over the data items returned from the server
+                    // the index variable is the position in the colleciton.
+                    // the item variable is the item itself   
+                    
+                    $.each(prayerData, function (index, item) {
+                        if (item.Answered == true) {
+                            yn ="Yes";
+							row = "<tr data-id='"+item.ID+"' id='"+item.ID+"' class='success table-responsive'>";
+							label = "<span data-label='"+item.ID+"' class='label label-success'>";
+                        }
+                        else {
+                            yn = "No";
+							row = "<tr data-id='"+item.ID+"' id='"+item.ID+"' class='warning table-responsive'>";
+							label = "<span data-label ='"+item.ID+"' class='label label-danger'>";
+                        }
+                        // append the data to the table
+                         $prayerList.append(row + "<td>" + item.Name + "</td>" +
+						 "<td style='white-space:nowrap'>" + item.Date + "</td>" + 
+						 "<td style='white-space:normal'>" + item.Description + "</td>" +
+                         "<td style='white-space:normal'><img src='http://mvbc.netne.net/" + item.AnswerPic + "'/></td>" +
+                         
+						 "<td>" + label + yn + "</span></td></tr>"
+                            );
+
+                    });
+                    $prayerList.append("</tbody>");
+
+                },
+
+            }).always(function () {
+               $("#ajaxSpinnerImage").hide();
+            });
+
+        });
+    </script>
+</body>
+
+</html>
