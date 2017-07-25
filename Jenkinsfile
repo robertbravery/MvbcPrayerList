@@ -1,10 +1,6 @@
 #!groovy
-pipeline {
- stages {
-  stage('Build') {
-   node {
+
+   node ('checkout'){
     echo 'checkout scm'
    }
-  }
- }
-}
+
