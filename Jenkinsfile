@@ -4,7 +4,7 @@ pipeline {
   stage('Build') {
    node {
     echo 'checkout scm'
-    } 
+   }
   }
  }
 }
