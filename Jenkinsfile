@@ -48,5 +48,6 @@ pipeline {
         echo "We would normally run tests here ..."
         echo "tests done ..."
       }
+    }
   }
 }
