@@ -38,10 +38,17 @@ pipeline {
       }
     }
      stage("Another Stage") {
-      steps ("step1"){
+      steps {
         echo "This is the test stage ..."
         echo "We would normally run tests here ..."
-        echo "tests done ..."
+        step("step 1") {
+          echo "step 1"
+          echo "tests done ..."
+        }
+        step("step 2") {
+          echo "step 2"
+
+        }
       }
       
     }
