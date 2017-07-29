@@ -41,11 +41,11 @@ pipeline {
       steps {
         echo "This is the test stage ..."
         echo "We would normally run tests here ..."
-        step("step 1") {
+        step {
           echo "step 1"
           echo "tests done ..."
         }
-        step("step 2") {
+        step {
           echo "step 2"
 
         }
