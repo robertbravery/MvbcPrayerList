@@ -43,16 +43,7 @@ pipeline {
         echo "We would normally run tests here ..."
         echo "tests done ..."
       }
-      steps ("step2"){
-        echo "This is new step ..."
-        echo "Perhaps run a different test ..."
-        echo "tests done ..."
-      }
-       steps ("step3"){
-        echo "This is new step ..."
-        echo "Perhaps run a different test ..."
-        echo "tests done ..."
-      }
+      
     }
   }
 }
